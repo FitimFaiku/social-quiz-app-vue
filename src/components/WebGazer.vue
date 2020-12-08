@@ -1,6 +1,10 @@
+<template>
+  <div>Hello X:{{getX()}}, Y: {{getY()}}</div>
+</template>
 <script>
 import webgazer from "webgazer";
 export default {
+  coordinate : {x: 0, y:0},
   name: "WebGazer",
   render: (h) => h(),
   props: {
@@ -27,12 +31,23 @@ export default {
           if (data) {
             thiz.x = data.x;
             thiz.y = data.y;
+            this.setXAndY(data.x, data.y);
             thiz.$emit("update", { x: data.x, y: data.y });
           }
         })
         .begin();
       webgazer.showPredictionPoints(true);
     }
+  },
+  setXAndY(x, y) {
+    this.coordinate.x=x;
+    this.coordinate.y=y;
+  },
+  getX(){
+    return this.coordinate.x;
+  },
+  getY(){
+    return this.coordinate.y;
   },
   beforeDestroy() {
     webgazer.end();

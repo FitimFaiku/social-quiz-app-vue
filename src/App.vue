@@ -50,6 +50,7 @@
     <div class="container">
       <router-view />
     </div>
+    <div>Fitim {{this.x}} {{this.y}} </div>
   <WebGazer @update="onUpdate" :off="false" />  
   </div>
 </template>
@@ -58,6 +59,12 @@
 import WebGazer from "@/components/WebGazer.vue";
 export default {
   components: { WebGazer },
+  data() {
+    return {
+      x: 0,
+      y: 0,
+    };
+  },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -81,6 +88,10 @@ export default {
     logOut() {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');
+    }, 
+    onUpdate(coord) {
+      this.x = coord.x;
+      this.y = coord.y;
     }
   }
 };
