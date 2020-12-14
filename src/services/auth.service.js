@@ -13,7 +13,6 @@ class AuthService {
         if (response.data.accessToken) {
           localStorage.setItem('user', JSON.stringify(response.data));
         }
-
         return response.data;
       });
   }
@@ -23,6 +22,7 @@ class AuthService {
   }
 
   register(user) {
+    console.log("Register", user);
     return axios.post(API_URL + 'signup', {
       username: user.username,
       email: user.email,

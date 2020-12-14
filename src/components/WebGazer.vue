@@ -1,6 +1,3 @@
-<template>
-  <div>Hello X:{{getX()}}, Y: {{getY()}}</div>
-</template>
 <script>
 import webgazer from "webgazer";
 export default {

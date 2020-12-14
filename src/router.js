@@ -33,6 +33,12 @@ export const router = new Router({
       component: () => import('./views/Profile.vue')
     },
     {
+      path: '/playquiz',
+      name: 'playquiz',
+      // lazy-loaded
+      component: () => import('./views/PlayQuizView.vue')
+    },
+    {
       path: '/admin',
       name: 'admin',
       // lazy-loaded
@@ -52,3 +58,16 @@ export const router = new Router({
     }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const publicPages = ['/login', '/register'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('user');
+
+  if (authRequired && !loggedIn) {
+    return next('/login');
+  }
+
+  next();
+})

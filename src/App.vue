@@ -34,6 +34,10 @@
 
       <div v-if="currentUser" class="navbar-nav ml-auto">
         <li class="nav-item">
+          <router-link to="/playquiz" class="nav-link">
+          </router-link>
+        </li>
+        <li class="nav-item">
           <router-link to="/profile" class="nav-link">
             <font-awesome-icon icon="user" />
             {{ currentUser.username }}
@@ -46,19 +50,49 @@
         </li>
       </div>
     </nav>
-
-    <div class="container">
-      <router-view />
+    
+     <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 offset-sm-3">
+                    <div v-if="alert.message" :class="`alert ${alert.type}`">{{alert.message}}</div>
+                    <router-view></router-view>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- <div class="jumbotron">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 offset-sm-3">
+                        <div v-if="alert.message" :class="'alert ' + alert.type">{{alert.message}}</div>
+                        <router-view></router-view>
+                    </div>
+                </div>
+            </div>
+        </div> -->
     <div>Fitim {{this.x}} {{this.y}} </div>
   <WebGazer @update="onUpdate" :off="false" />  
   </div>
+
+
+  
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import WebGazer from "@/components/WebGazer.vue";
+import firebase from "firebase";
 export default {
   components: { WebGazer },
+  created() {
+    firebase.auth().onAuthStateChanged(user => {
+           if (user) {
+               this.user = user;
+           }
+       });
+  },
   data() {
     return {
       x: 0,
@@ -66,6 +100,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+            alert: state => state.alert
+    }),
     currentUser() {
       return this.$store.state.auth.user;
     },
@@ -85,6 +122,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+          clearAlert: 'alert/clear' 
+      }),
     logOut() {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');
@@ -93,6 +133,13 @@ export default {
       this.x = coord.x;
       this.y = coord.y;
     }
-  }
+  }, 
+  watch: {
+    $route (){
+        // clear alert on location change
+        
+        this.clearAlert();
+    }
+  } 
 };
 </script>

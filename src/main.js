@@ -14,6 +14,7 @@ import {
   faSignInAlt,
   faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
+import firebase from 'firebase';
 
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 
@@ -22,8 +23,35 @@ Vue.config.productionTip = false;
 Vue.use(VeeValidate);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-new Vue({
+let app = '';
+const firebaseConfig = {
+  apiKey: "AIzaSyCk1laCfQmhgGem65A0u9LIO3_WrO9oRJc",
+  authDomain: "socialquizapp.firebaseapp.com",
+  projectId: "socialquizapp",
+  storageBucket: "socialquizapp.appspot.com",
+  messagingSenderId: "1024038656131",
+  appId: "1:1024038656131:web:d55b8bafe5b9807e62a3b6",
+  measurementId: "G-30BVR2FD06"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+
+firebase.auth().onAuthStateChanged(() => {
+  if (!app) {
+    /* eslint-disable no-new */
+    app = new Vue({
+      router,
+      store,
+      render: h => h(App)
+    }).$mount('#app');
+  }
+});
+
+/* new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app');
+}).$mount('#app'); */
+
+/* 1WWC4nWaBfd_i1EJSpRT_a0Z */

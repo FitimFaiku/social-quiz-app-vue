@@ -1,62 +1,83 @@
 import AuthService from '../services/auth.service';
+import { router } from '../router';
 
 const user = JSON.parse(localStorage.getItem('user'));
+const state = user
+    ? { status: { loggedIn: true }, user }
+    : { status: {}, user: null };
 
-const initialState = user
-  ? { status: { loggedIn: true }, user }
-  : { status: { loggedIn: false }, user: null };
+const actions = {
+    login({ dispatch, commit }, { username, password }) {
+        console.log("Login", username, password );
+        commit('loginRequest', { username });
+    
+        AuthService.login(username, password)
+            .then(
+                user => {
+                    commit('loginSuccess', user);
+                    router.push('/');
+                },
+                error => {
+                    commit('loginFailure', error);
+                    dispatch('alert/error', error, { root: true });
+                }
+            );
+    },
+    logout({ commit }) {
+        AuthService.logout();
+        commit('logout');
+    },
+    register({ dispatch, commit }, user) {
+        commit('registerRequest', user);
+        AuthService.register(user)
+            .then(
+                user => {
+                    commit('registerSuccess', user);
+                    router.push('/login');
+                    setTimeout(() => {
+                        // display success message after route change completes
+                        dispatch('alert/success', 'Registration successful', { root: true });
+                    })
+                },
+                error => {
+                    commit('registerFailure', error);
+                    dispatch('alert/error', error, { root: true });
+                }
+            );
+    }
+};
+
+const mutations = {
+    loginRequest(state, user) {
+        state.status = { loggingIn: true };
+        state.user = user;
+    },
+    loginSuccess(state, user) {
+        state.status = { loggedIn: true };
+        state.user = user;
+    },
+    loginFailure(state) {
+        state.status = {};
+        state.user = null;
+    },
+    logout(state) {
+        state.status = {};
+        state.user = null;
+    },
+    registerRequest(state) {
+        state.status = { registering: true };
+    },
+    registerSuccess(state) {
+        state.status = {};
+    },
+    registerFailure(state) {
+        state.status = {};
+    }
+};
 
 export const auth = {
   namespaced: true,
-  state: initialState,
-  actions: {
-    login({ commit }, user) {
-      return AuthService.login(user).then(
-        user => {
-          commit('loginSuccess', user);
-          return Promise.resolve(user);
-        },
-        error => {
-          commit('loginFailure');
-          return Promise.reject(error);
-        }
-      );
-    },
-    logout({ commit }) {
-      AuthService.logout();
-      commit('logout');
-    },
-    register({ commit }, user) {
-      return AuthService.register(user).then(
-        response => {
-          commit('registerSuccess');
-          return Promise.resolve(response.data);
-        },
-        error => {
-          commit('registerFailure');
-          return Promise.reject(error);
-        }
-      );
-    }
-  },
-  mutations: {
-    loginSuccess(state, user) {
-      state.status.loggedIn = true;
-      state.user = user;
-    },
-    loginFailure(state) {
-      state.status.loggedIn = false;
-      state.user = null;
-    },
-    logout(state) {
-      state.status.loggedIn = false;
-      state.user = null;
-    },
-    registerSuccess(state) {
-      state.status.loggedIn = false;
-    },
-    registerFailure(state) {
-      state.status.loggedIn = false;
-    }
-  }
+  state,
+  actions,
+  mutations
 };
