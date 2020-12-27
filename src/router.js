@@ -46,10 +46,10 @@ export const router = new Router({
     },
 
     {
-      path: '/admin',
-      name: 'admin',
+      path: '/calibration',
+      name: 'CalibrationView',
       // lazy-loaded
-      component: () => import('./views/BoardAdmin.vue')
+      component: () => import('./views/CalibrationView.vue')
     },
     {
       path: '/mod',

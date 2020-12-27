@@ -42,3 +42,4 @@ export default {
   cursor crosshair
   position fixed
 </style>
+
