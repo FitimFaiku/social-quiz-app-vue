@@ -38,8 +38,8 @@
           >Password is required!</div>
         </div>
         <div class="form-group">
-          <button class="btn btn-primary btn-block" :disabled="loading">
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+          <button class="btn btn-primary btn-block" :disabled="status.loggedIn">
+            <!-- <span v-show="status.loggedIn" class="spinner-border spinner-border-sm"></span> -->
             <span>Login</span>
           </button>
         </div>
@@ -65,6 +65,7 @@
 <script>
 import User from '../models/user';
 // import firebase from 'firebase';
+import { mapState } from 'vuex';
 import "firebaseui/dist/firebaseui.css";
 import FirebaseService from '../services/firebase.service'
 
@@ -80,7 +81,8 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    }
+    },
+    ...mapState('auth', ['status'])
   },
   created() {
     if (this.loggedIn) {
@@ -98,18 +100,7 @@ export default {
         }
 
         if (this.user.username && this.user.password) {
-          this.$store.dispatch('auth/login', this.user).then(
-            () => {
-              this.$router.push('/profile');
-            },
-            error => {
-              this.loading = false;
-              this.message =
-                (error.response && error.response.data) ||
-                error.message ||
-                error.toString();
-            }
-          );
+          this.$store.dispatch('auth/login', {username: this.user.username,password: this.user.password});
         }
       });
     },

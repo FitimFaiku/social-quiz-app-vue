@@ -37,9 +37,8 @@ class FirebaseService {
                 // login
                 // Just Login
                 console.log("Login");
-                    // login()
-                const loginData = {username:result.user.displayName, password:result.user.uid};
-                store.dispatch('auth/login', loginData);  
+                // login()
+                store.dispatch('auth/login', {username:result.user.displayName, password:result.user.uid});  
                 //this.login(result.user.email,result.user.uid)
             }
                 

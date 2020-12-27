@@ -13,9 +13,10 @@ const actions = {
     
         AuthService.login(username, password)
             .then(
-                user => {
-                    commit('loginSuccess', user);
-                    router.push('/');
+                res => {
+                    console.log("Response login", res);
+                    commit('loginSuccess', res.user);
+                    router.push('/home');
                 },
                 error => {
                     commit('loginFailure', error);
@@ -31,19 +32,39 @@ const actions = {
         commit('registerRequest', user);
         AuthService.register(user)
             .then(
-                user => {
-                    commit('registerSuccess', user);
-                    router.push('/login');
-                    setTimeout(() => {
-                        // display success message after route change completes
-                        dispatch('alert/success', 'Registration successful', { root: true });
-                    })
+                res => {
+                    console.log("Res", res);
+                    console.log("Res sucess", res.data.success);
+                    if(!res.data.success){
+                        commit('registerFailure', res.data.message.message);
+                        dispatch('alert/error', res.data.message.message, { root: true });
+                    } else {
+                        commit('registerSuccess');
+                        router.push('/login');
+                        setTimeout(() => {
+                            // display success message after route change completes
+                            dispatch('alert/success', 'Registration successful', { root: true });
+                        })
+                    }
                 },
                 error => {
+                    console.log("Error");
                     commit('registerFailure', error);
                     dispatch('alert/error', error, { root: true });
                 }
             );
+    },
+    checkUser({commit }) {
+        let user = AuthService.getLoggedInUser();
+        if(user != undefined && user != null ){
+            const userJSON = JSON.parse(user)
+            commit('loginSuccess', userJSON.user);
+          } else {
+            this.$router.push('/login')
+          }
+
+        
+        
     }
 };
 

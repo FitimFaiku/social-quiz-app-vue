@@ -36,8 +36,15 @@ export const router = new Router({
       path: '/playquiz',
       name: 'playquiz',
       // lazy-loaded
-      component: () => import('./views/PlayQuizView.vue')
+      component: () => import('./views/PlayQuiz.vue')
     },
+    {
+      path: '/playquiz/solo/:quizId',
+      name: 'playquiz-solo',
+      // lazy-loaded
+      component: () => import('./views/PlayQuizSolo.vue')
+    },
+
     {
       path: '/admin',
       name: 'admin',
@@ -55,13 +62,19 @@ export const router = new Router({
       name: 'user',
       // lazy-loaded
       component: () => import('./views/BoardUser.vue')
+    },
+    {
+      path: '/createquiz',
+      name: 'createquiz',
+      // lazy-loaded
+      component: () => import('./views/CreateQuiz.vue')
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/login', '/register'];
+  const publicPages = ['/login', '/register', '/playquiz'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 
