@@ -39,20 +39,20 @@ body {
           <router-link to="/news" class="nav-link">News</router-link>
         </li>
         <li class="nav-item">
-          <router-link v-if="currentUser" to="/playquiz" class="nav-link">Play</router-link>
+          <router-link v-if="user" to="/playquiz" class="nav-link">Play</router-link>
         </li>
         <li class="nav-item">
-          <router-link v-if="currentUser" to="/createquiz" class="nav-link">Quiz Erstellen</router-link>
+          <router-link v-if="user" to="/createquiz" class="nav-link">Quiz Erstellen</router-link>
         </li>
         <li class="nav-item">
-          <router-link v-if="currentUser" to="/posts" class="nav-link">Posts</router-link>
+          <router-link v-if="user" to="/posts" class="nav-link">Posts</router-link>
         </li>
         <li class="nav-item">
-          <router-link v-if="currentUser" to="/friends" class="nav-link">Freunde</router-link>
+          <router-link v-if="user" to="/friends" class="nav-link">Freunde</router-link>
         </li>
       </div>
 
-      <div v-if="!currentUser" class="navbar-nav ml-auto">
+      <div v-if="!user" class="navbar-nav ml-auto">
         <li class="nav-item">
           <router-link to="/register" class="nav-link">
             <font-awesome-icon icon="user-plus" />Sign Up
@@ -65,7 +65,7 @@ body {
         </li>
       </div>
 
-      <div v-if="currentUser" class="navbar-nav ml-auto">
+      <div v-if="user" class="navbar-nav ml-auto">
         <!-- <li class="nav-item">
           <router-link to="/playquiz" class="nav-link">
           </router-link>
@@ -74,7 +74,7 @@ body {
         <li class="nav-item">
           <router-link to="/profile" class="nav-link">
             <font-awesome-icon icon="user" />
-            <!-- {{ currentUser.username }} -->
+            <!-- {{ user.username }} -->
           </router-link>
         </li>
         <li class="nav-item">
@@ -110,6 +110,7 @@ body {
     <div v-if="eyeTrackingOn"> 
       <WebGazer @update="onUpdate" :off="false" />
     </div>
+
   </div>
 
 
@@ -133,25 +134,9 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-            alert: state => state.alert,
-            currentUser: state => state.auth.user,
-            eyeTrackingOn: state => state.eyeTrackingOn
-    }),
-    showAdminBoard() {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_ADMIN');
-      }
-
-      return false;
-    },
-    showModeratorBoard() {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_MODERATOR');
-      }
-
-      return false;
-    }
+    ...mapState('auth',['user']),
+    ...mapState('alert', ['alert']),
+    ...mapState('eyeTracking',['eyeTrackingOn'])
   },
   methods: {
     ...mapActions({
@@ -189,6 +174,8 @@ export default {
     if(user != undefined && user != null ){
       console .log("Is authenticated."); */
     this.$store.dispatch('auth/checkUser');
+    console.log("eyeTracking", this.eyeTrackingOn);
+    console.log("User", this.user);
     /* } else {
       this.$router.push('/login')
     } */

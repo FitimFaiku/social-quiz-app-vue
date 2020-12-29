@@ -1,6 +1,8 @@
 const state = {
-    type: null,
-    message: null
+    alert: {
+        type: null,
+        message: null
+    }
 };
 
 const actions = {
@@ -17,16 +19,16 @@ const actions = {
 
 const mutations = {
     success(state, message) {
-        state.type = 'alert-success';
-        state.message = message;
+        state.alert.type = 'alert-success';
+        state.alert.message = message;
     },
     error(state, message) {
-        state.type = 'alert-danger';
-        state.message = message;
+        state.alert.type = 'alert-danger';
+        state.alert.message = message;
     },
     clear(state) {
-        state.type = null;
-        state.message = null;
+        state.alert.type = null;
+        state.alert.message = null;
     }
 };
 

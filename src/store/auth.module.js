@@ -59,6 +59,7 @@ const actions = {
         if(user != undefined && user != null ){
             const userJSON = JSON.parse(user)
             commit('loginSuccess', userJSON.user);
+            console.log("User Sucessfully loged in");
           } else {
             this.$router.push('/login')
           }
