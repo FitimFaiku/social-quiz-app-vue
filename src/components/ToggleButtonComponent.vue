@@ -86,6 +86,7 @@ export default {
     user-select: none;
     cursor: pointer;
     color: white;
+    margin-bottom: 0rem !important;
 }
 .toggle__button input[type="checkbox"] {
     opacity: 0;

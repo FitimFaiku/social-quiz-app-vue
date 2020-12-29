@@ -61,7 +61,7 @@ const actions = {
             commit('loginSuccess', userJSON.user);
             console.log("User Sucessfully loged in");
           } else {
-            this.$router.push('/login')
+            router.push('/login')
           }
 
         

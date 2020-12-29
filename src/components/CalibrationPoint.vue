@@ -88,9 +88,6 @@ export default {
       return `${result}%`;
     },
     backgroundColor() {
-      if(this.count>this.max){
-        this.calibrationSuceeded();
-      }
       return this.count < this.max ? "red" : "green";
     },
     hover() {

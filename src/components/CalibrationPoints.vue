@@ -17,13 +17,13 @@
       :bottom="calcBottom(count)"
       @click="onClick"
       @create="onCreate"
-      :calibrationSuceeded="calibrationSuceededForOnePoint"
     />
   </div>
 </template>
 
 <script>
 import CalibrationPoint from "@/components/CalibrationPoint.vue";
+import {router} from '@/router'
 export default {
   name: "CalibrationPoints",
   components: { CalibrationPoint },
@@ -36,7 +36,6 @@ export default {
       type: Number,
       default: 0,
     },
-    calibrationSuceededForOnePoint: {type: Function},
   },
   data() {
     return {
@@ -49,8 +48,9 @@ export default {
     onClick(id) {
       this.points[id] += 1;
       if (typeof Object.values(this.points).find((e) => e < this.repetitions) === "undefined") {
-        console.log("Calibrated");
         this.calibrated = true;
+        localStorage.setItem('hasCalibrated', JSON.stringify(true));
+        router.push('home');
       }
     },
     onCreate(id) {

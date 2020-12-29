@@ -24,8 +24,7 @@ body {
 <template>
   <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <ToggleButtonComponent labelEnableText="Eye Tracking An" v-bind:defaultState="eyeTrackingOn" labelDisableText="Eye Tracking Aus" @change="onChangeToggleButton" />
-      <a href="/home" class="navbar-brand" @click.prevent><img src="./assets/logo.svg" /></a>
+      <router-link to="/home" class="nav-link"> <a href="/home" class="navbar-brand" @click.prevent><img src="./assets/logo.svg" /></a></router-link>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
           <router-link to="/home" class="nav-link">
@@ -65,12 +64,12 @@ body {
         </li>
       </div>
 
+      <ToggleButtonComponent labelEnableText="Eye Tracking An" v-bind:defaultState="eyeTrackingOn" labelDisableText="Eye Tracking Aus" @change="onChangeToggleButton" />
       <div v-if="user" class="navbar-nav ml-auto">
         <!-- <li class="nav-item">
           <router-link to="/playquiz" class="nav-link">
           </router-link>
         </li> -->
-      
         <li class="nav-item">
           <router-link to="/profile" class="nav-link">
             <font-awesome-icon icon="user" />
@@ -110,7 +109,6 @@ body {
     <div v-if="eyeTrackingOn"> 
       <WebGazer @update="onUpdate" :off="false" />
     </div>
-
   </div>
 
 
@@ -147,13 +145,14 @@ export default {
       this.$router.push('/login');
     }, 
     onUpdate(coord) {
-      this.$store.commit('eyeTracking/setX', coord.x);
-      this.$store.commit('eyeTracking/setY', coord.y);
+      console.log("OnUpdate", coord);
+      this.$store.commit('eyeTracking/setX', {x:coord.x});
+      this.$store.commit('eyeTracking/setY', {y:coord.y});
 /*       this.x = coord.x;
       this.y = coord.y; */
     },
     onChangeToggleButton(value){
-      this.$store.dispatch('eyeTracking/checkHasCalibratedAndSetEyeTracking', value);
+      this.$store.dispatch('eyeTracking/checkHasCalibratedAndSetEyeTracking', {isOn:value});
     },
     hasCamera() {
       navigator.getUserMedia({video: true},function (stream) {
