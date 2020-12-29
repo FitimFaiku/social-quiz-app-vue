@@ -6,11 +6,8 @@ const actions = {
     checkHasCalibratedAndSetEyeTracking({ commit }, {isOn}) {
         let hasCalibratedText = localStorage.getItem('hasCalibrated');
         if(isOn && !hasCalibratedText) {
-            console.log("Is on but has no item in localstorage");
             router.push('/calibration');
-        } else {
-            console.log("I am in else", isOn, hasCalibratedText);
-        }
+        } 
         commit('setEyeTreacking', isOn);
     },
 };

@@ -7,10 +7,6 @@ export default {
     off: {
       type: Boolean,
       default: false,
-    },
-    quit: {
-      type: Boolean,
-      default: false,
     }
   },
   data: () => {
@@ -18,13 +14,6 @@ export default {
       x: 0,
       y: 0,
     };
-  },
-  computed: {
-    quitWebGazer() {
-      if(this.quitWebGazer){
-        webgazer.end();
-      }
-    }
   },
   async created() {
     if (window && !this.off) {

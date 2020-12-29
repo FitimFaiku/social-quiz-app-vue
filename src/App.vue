@@ -106,8 +106,9 @@ body {
             </div>
         </div> -->
     <!-- <div>Fitim {{this.x}} {{this.y}} </div> -->
+  
     <div v-if="eyeTrackingOn"> 
-      <WebGazer @update="onUpdate" :off="false" :quit="!eyeTrackingOn" />
+      <WebGazer @update="onUpdate" :off="false" />
     </div>
   </div>
 
