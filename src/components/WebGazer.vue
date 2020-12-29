@@ -19,6 +19,13 @@ export default {
       y: 0,
     };
   },
+  computed: {
+    quitWebGazer() {
+      if(this.quitWebGazer){
+        webgazer.end();
+      }
+    }
+  },
   async created() {
     if (window && !this.off) {
       const thiz = this;
@@ -42,13 +49,6 @@ export default {
   beforeDestroy() {
     webgazer.end();
   },
-  methods: {
-    quitWebGazer() {
-      if(this.quitWebGazer){
-        webgazer.end();
-      }
-    }
-  }
 };
 </script>
 
