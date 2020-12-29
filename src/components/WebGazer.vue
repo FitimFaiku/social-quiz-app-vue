@@ -8,6 +8,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    quit: {
+      type: Boolean,
+      default: false,
+    }
   },
   data: () => {
     return {
@@ -25,7 +29,7 @@ export default {
         .setRegression("ridge")
         .setGazeListener(function(data) {
           if (data) {
-            console.log("Data", data);
+            console.log("Data:", data);
             thiz.x = data.x;
             thiz.y = data.y;
             thiz.$emit("update", { x: data.x, y: data.y });
@@ -38,6 +42,13 @@ export default {
   beforeDestroy() {
     webgazer.end();
   },
+  methods: {
+    quitWebGazer() {
+      if(this.quitWebGazer){
+        webgazer.end();
+      }
+    }
+  }
 };
 </script>
 
