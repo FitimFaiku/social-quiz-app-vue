@@ -153,7 +153,7 @@ export default {
       this.y = coord.y; */
     },
     onChangeToggleButton(value){
-      this.$store.commit('eyeTracking/setEyeTreacking', value);
+      this.$store.dispatch('eyeTracking/checkHasCalibratedAndSetEyeTracking', value);
     },
     hasCamera() {
       navigator.getUserMedia({video: true},function (stream) {
@@ -174,8 +174,6 @@ export default {
     if(user != undefined && user != null ){
       console .log("Is authenticated."); */
     this.$store.dispatch('auth/checkUser');
-    console.log("eyeTracking", this.eyeTrackingOn);
-    console.log("User", this.user);
     /* } else {
       this.$router.push('/login')
     } */

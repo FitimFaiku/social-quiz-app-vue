@@ -17,6 +17,7 @@
       :bottom="calcBottom(count)"
       @click="onClick"
       @create="onCreate"
+      :calibrationSuceeded="calibrationSuceededForOnePoint"
     />
   </div>
 </template>
@@ -35,6 +36,7 @@ export default {
       type: Number,
       default: 0,
     },
+    calibrationSuceededForOnePoint: {type: Function},
   },
   data() {
     return {
@@ -47,6 +49,7 @@ export default {
     onClick(id) {
       this.points[id] += 1;
       if (typeof Object.values(this.points).find((e) => e < this.repetitions) === "undefined") {
+        console.log("Calibrated");
         this.calibrated = true;
       }
     },

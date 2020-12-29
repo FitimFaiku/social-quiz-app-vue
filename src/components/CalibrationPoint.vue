@@ -66,6 +66,9 @@ export default {
       type: String,
       default: "150px",
     },
+    calibrationSuceeded: {
+      type: Function,
+    },
   },
   data() {
     return {
@@ -85,6 +88,9 @@ export default {
       return `${result}%`;
     },
     backgroundColor() {
+      if(this.count>this.max){
+        this.calibrationSuceeded();
+      }
       return this.count < this.max ? "red" : "green";
     },
     hover() {
