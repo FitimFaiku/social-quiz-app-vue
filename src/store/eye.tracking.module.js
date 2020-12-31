@@ -1,6 +1,10 @@
 
 import {router} from '@/router'
 const state = {x:0, y:0, eyeTrackingOn: false};
+const hasCalibratedText = JSON.parse(localStorage.getItem('hasCalibrated'));
+if(hasCalibratedText){
+    state.eyeTracking = true;
+}
 
 const actions = {
     checkHasCalibratedAndSetEyeTracking({ commit }, {isOn}) {
@@ -14,11 +18,11 @@ const actions = {
 
 const mutations = {
     setX(state, x) {
-        console.log("X", x);
+        // console.log("X", x);
         state.x = x;
     },
     setY(state, y) {
-        console.log("Y", y);
+        // console.log("Y", y);
         state.y = y;
     },
     setEyeTreacking(state, isOn){

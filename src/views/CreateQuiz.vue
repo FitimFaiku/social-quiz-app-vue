@@ -7,6 +7,27 @@ button {
 <template>
   <div id="createquiz">
     <h1>Willkomen zu der Form für die Erstellung eines neuen Quizes</h1>
+    <!-- Sidenav to NAvigate Through the Questions -->
+    <div>
+      
+      <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" title="Fragen" shadow visible>
+        <template>
+          <div class="p-3">
+            <h2 id="sidebar-no-header-title">Aktuelle Fragen:</h2>
+
+            <nav class="mb-3">
+              <b-nav v-for="(question,index) of questions" vertical v-bind:key="index">
+                <b-nav-item @click="goToQuestion(index)">Frage Nr {{index+1}}: {{question.text}}</b-nav-item>
+                <!-- <b-nav-item active @click="hide">Active</b-nav-item>
+                <b-nav-item href="#link-1" @click="hide">Link</b-nav-item>
+                <b-nav-item href="#link-2" @click="hide">Another Link</b-nav-item> -->
+              </b-nav>
+            </nav>
+            <!-- <b-button variant="primary" block @click="hide">Close Sidebar</b-button> -->
+          </div>
+        </template>
+      </b-sidebar>
+    </div>
     <!-- <b-form-group id="quiz-input" description="Quiz Eigenschaften" label="Gib deine gewünschten Quiz Eigenschaften ein." > -->
     <b-form-group
       id="fieldset-1"
@@ -50,13 +71,13 @@ button {
       :value="isPrivate"
       :checked="isPrivate"
     >
-    Dieses Quiz Private abspeichern
+    Dieses Quiz Privat abspeichern
     </b-form-checkbox>
 
       <div>
         <b-form-group
           id="fieldset-3"
-          description="Frage"
+          v-bind:description="'Frage Nummer ' + (questionIndex+1)"
           label="Gib eine Frage ein"
           label-for="quiz-question-text"
           valid-feedback="Danke!"
@@ -189,12 +210,14 @@ button {
         </div>
       </div> -->
       <b-button variant="primary" @click="next" >
-        Next
+        Frage Hinzufügen
       </b-button>
 
       <b-button variant="outline-primary" @click="handleSave" >
-        Save
+        Speichern
       </b-button>
+
+      <b-button v-b-toggle.sidebar-no-header>Navigation Aufmachen</b-button>
     </div>
     
 </template>
@@ -219,7 +242,7 @@ export default {
   },
   data() {
     return {
-      isPrivate:true,
+      isPrivate:false,
       title:'Test Title',
       description: 'Test Description',
       questions: [
@@ -243,12 +266,14 @@ export default {
   },
   methods: {
     next(){
-
+      const question = {text:'',answers:[{text:'', isRight:false}, {text:'', isRight:false},{text:'', isRight:false}, {text:'', isRight:false}], type:'', duration: 30, correctAnswers:[]}
+      this.questions.push(question);
+      this.questionIndex++;
     },
 
     handleSave(){
       console.log("Handle Save");
-
+      // MAke some Validations
       // Here we map the selected correct answer to the isRight property
       for(var i=0; i<this.questions.length; i++){
         for(var j=0; j<this.questions[i].correctAnswers.length; j++){
@@ -259,6 +284,10 @@ export default {
       QuizService.createQuiz(this.title,this.description, this.questions, this.isPrivate).then(respopnse => {
         console.log("Response",respopnse);
       })
+    }, 
+    goToQuestion(index) {
+      console.log("index", index, "questions", this.questions);
+      this.questionIndex = index;
     }
 
   }

@@ -43,6 +43,7 @@ class QuizService {
         quiz_description: description,
         questions: questionsArray,
         is_private: isPrivate,
+        is_public: true,
         created_from_playerid: store.state.auth.user.id,
       }
       console.log("createQuiz Object", createQuiz);

@@ -112,10 +112,9 @@ import { mapState } from 'vuex'
 export default {
   name: 'playquiz-solo',
   computed: {
-    ...mapState({
-            alert: state => state.alert,
-            currentUser: state => state.auth.user
-    }),
+    ...mapState('auth',['user']),
+    ...mapState('alert', ['alert']),
+    ...mapState('eyeTracking',['eyeTrackingOn', 'x', 'y'])
   },
   data() {
     return {
@@ -147,6 +146,8 @@ export default {
     countDownTimer() {
       if(this.questions[this.questionIndex].duration_in_sec && this.questions[this.questionIndex].duration_in_sec > 0) {
         setTimeout(() => {
+            const element = document.elementFromPoint(this.x, this.y);
+            console.log("Current Element", element);
             this.questions[this.questionIndex].duration_in_sec -= 1
             this.countDownTimer()
         }, 1000)

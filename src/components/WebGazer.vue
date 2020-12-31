@@ -25,7 +25,7 @@ export default {
         .setRegression("ridge")
         .setGazeListener(function(data) {
           if (data) {
-            console.log("Data:", data);
+            // console.log("Data:", data);
             thiz.x = data.x;
             thiz.y = data.y;
             thiz.$emit("update", { x: data.x, y: data.y });
