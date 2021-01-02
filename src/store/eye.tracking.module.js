@@ -18,11 +18,11 @@ const actions = {
 
 const mutations = {
     setX(state, x) {
-        // console.log("X", x);
+        //console.log("X", x);
         state.x = x;
     },
     setY(state, y) {
-        // console.log("Y", y);
+        //console.log("Y", y);
         state.y = y;
     },
     setEyeTreacking(state, isOn){

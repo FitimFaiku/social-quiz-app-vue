@@ -119,6 +119,7 @@ export default {
   data() {
     return {
       quizId: null,
+      elements: [{text: '', count:0}],
       questions : [{selectedAnswer:null, duration_in_sec: null, question: '', question_type: '', answers:[{id:'',answer: '', is_correct:false}]}],
       questionIndex: 0,
       finalStage:false,
@@ -146,8 +147,28 @@ export default {
     countDownTimer() {
       if(this.questions[this.questionIndex].duration_in_sec && this.questions[this.questionIndex].duration_in_sec > 0) {
         setTimeout(() => {
-            const element = document.elementFromPoint(this.x, this.y);
-            console.log("Current Element", element);
+
+            // Do this thing in watch not here !!! focus after 3 and click after 7
+            if(this.eyeTrackingOn){
+              const element = document.elementFromPoint(this.x, this.y);
+              // style, focus() 
+              if(element && element.tagName.toLowerCase() ==='label'){
+                console.log("TagName", element.tagName.toLowerCase())
+                console.log("Text", element.textContent);
+                this.elements.find(obj => { 
+                  //console.log("OBJ", obj);
+                  if(obj.text === element.textContent) {
+                  obj.count = obj.count +1;
+                  if(obj.count>3){
+                    element.click();
+                    this.elements = [{text: '', count:0}];
+                  }
+                } else {
+                  this.elements.push({text: element.textContent, count:1});
+                }
+                })
+              }
+            } 
             this.questions[this.questionIndex].duration_in_sec -= 1
             this.countDownTimer()
         }, 1000)
