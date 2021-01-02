@@ -4,12 +4,13 @@ button {
   margin-left: 0.5rem;
 }
 </style>
+
 <template>
   <div id="createquiz">
     <h1>Willkomen zu der Form für die Erstellung eines neuen Quizes</h1>
+    <!-- <div class="card card-container"> -->
     <!-- Sidenav to NAvigate Through the Questions -->
     <div>
-      
       <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" title="Fragen" shadow visible>
         <template>
           <div class="p-3">
@@ -218,6 +219,7 @@ button {
       </b-button>
 
       <b-button v-b-toggle.sidebar-no-header>Navigation Aufmachen</b-button>
+    <!-- </div> -->
     </div>
     
 </template>

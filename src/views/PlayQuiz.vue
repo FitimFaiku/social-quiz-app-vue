@@ -1,9 +1,12 @@
 <template>
   <div id="PlayQuiz" class="PlayQuiz">
+      <h1>Wähle ein Quiz aus um zu spielen.</h1>
       <ul v-for="(quiz,index) in quizes" :key="index" role="toolbar">
         <li style="display:flex; flex-direction:column;">
-          {{quiz.quiz_title}}:{{quiz.quiz_description}}
-          <button class="btn btn-primary" aria-setsize="4" v-bind:aria-posinset="index" @click="playSolo(quiz.id)" >Button 1</button>
+          <h2>Titel: {{quiz.quiz_title}}</h2>
+          <h3>Beschreibung: {{quiz.quiz_description}}</h3>
+          <button class="btn btn-primary" aria-setsize="4" v-bind:aria-posinset="index" @click="playSolo(quiz.id)">{{quiz.quiz_title}} Spielen</button>
+          <!-- <button @click="deleteQuiz(quiz.id)">Löschen</button> -->
         </li>
       </ul>
 
@@ -24,33 +27,43 @@ import { mapState } from 'vuex'
 export default {
   name: 'PlayQuiz',
   computed: {
-    ...mapState({
-            alert: state => state.alert,
-            currentUser: state => state.auth.user
-    }),
+    ...mapState('auth',['user']),
+    ...mapState('alert', ['alert']),
   },
   data() {
     return {
-      quizes: [{id:0, quiz_title:'', quiz_description: '', created_at: null}]
+      quizes: [{id:0, quiz_title:'', quiz_description: '', created_at: null, created_from_playerid: 0}]
     };
   },
   mounted() {
-    QuizService.getAllPublicQuiz().then(
-      response => {
-          console.log("Response", response);
-        this.quizes = response;
-      },
-      error => {
-        this.content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
-      }
-    ); 
+    this.loadAndSetQuizes();
+
   },
   methods: {
     playSolo(quizId) {
       this.$router.push('/playquiz/solo/' + quizId);
+    },
+    deleteQuiz(quizId) {
+      QuizService.deleteQuiz(quizId).then(
+        () => {
+          this.loadAndSetQuizes();
+        }
+      )
+    },
+    loadAndSetQuizes(){
+      QuizService.getAllPublicQuiz().then(
+        response => {
+            console.log("Response", response);
+          this.quizes = response;
+        },
+        error => {
+          this.content =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+    ); 
+
     }
   }
 };

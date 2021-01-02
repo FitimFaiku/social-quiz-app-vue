@@ -74,11 +74,13 @@ export const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/login', '/register', '/playquiz', '/calibration'];
-  const authRequired = !publicPages.includes(to.path);
+  const publicPages = ['/news','/playquiz','/playquiz/solo/:quizId','/login', '/register', '/calibration'];
+  let authRequired = !publicPages.includes(to.path);
+  authRequired =  authRequired && !to.path.startsWith('/playquiz/solo/');
   const loggedIn = localStorage.getItem('user');
 
   if (authRequired && !loggedIn) {
+    console.log("Back to login --> ", to.path, to.path.startsWith('/playquiz/solo/'), authRequired)
     return next('/login');
   }
 

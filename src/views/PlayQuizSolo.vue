@@ -1,4 +1,7 @@
 <style lang="scss" scoped>
+$logo: #915F19;
+$primary: #053A85;
+$secondary: #388AFC;
 $font: "Dax", sans-serif;
 $white: #fff;
 $green: #007e90;
@@ -9,6 +12,11 @@ $green: #007e90;
   flex-wrap: wrap;
   flex-direction: row;
   // align-content: space-between;
+}
+.interesting-fact{
+  width: 100%;
+  min-height: 10rem;
+  text-align: center;
 }
 .answer {
   // width: calc(100% - 8rem);
@@ -31,8 +39,11 @@ $green: #007e90;
     display:none;
   }
   input:checked + label {
-    background: #008080;
-      color: #ffffff;
+    background: $primary;
+      color: $logo;
+  }
+  input:focus {
+    box-shadow: 0 0 4px 1px $secondary;
   }
 
 }
@@ -44,9 +55,12 @@ input[type="radio"] {
   padding:initial;
   border:initial;
   :checked {
-      background: #008080;
-      color: #ffffff;
-    }
+    background: $primary;
+    color: $logo;
+  }
+  :focus {
+    box-shadow: 0 0 4px 1px $secondary;
+  }
 }
 
 @media screen and (max-width: 600px){
@@ -73,14 +87,13 @@ input[type="radio"] {
         </div>
         <div class="playquiz-solo-time-left">
           <span>Zeit übrig: </span>
-          <span v-if="this.questions[this.questionIndex] && this.questions[this.questionIndex].duration_in_sec">{{this.questions[this.questionIndex].duration_in_sec}}</span>
+          <strong v-if="this.questions[this.questionIndex] && this.questions[this.questionIndex].duration_in_sec">{{this.questions[this.questionIndex].duration_in_sec}}</strong>
          
         </div>
         
       </header>
       <fieldset></fieldset>
-      <div v-if="!finalStage" v-bind="questions[questionIndex]">
-        <!-- <h2>Fragen {{questionIndex+1}}: {{questions[questionIndex].question}} Zeit übrig:</h2> -->
+      <div v-if="!finalStage">
         <fieldset class="fieldset-container">
           <legend>{{questions[questionIndex].question}}</legend>
 
@@ -95,6 +108,12 @@ input[type="radio"] {
           </div>
         </fieldset>
       </div>
+
+      <div class="interesting-fact">
+        <label> Beispiel Text zum schauen, wenn gecklickt wurde </label>
+      </div>
+
+
 
       <div v-if="finalStage"> 
         <h2>Ergebnis</h2>
@@ -115,6 +134,33 @@ export default {
     ...mapState('auth',['user']),
     ...mapState('alert', ['alert']),
     ...mapState('eyeTracking',['eyeTrackingOn', 'x', 'y'])
+  },
+  watch : {
+    x() {
+      if(this.eyeTrackingOn){
+        const element = document.elementFromPoint(this.x, this.y);
+        // style, focus() 
+        if(element && element.tagName.toLowerCase() ==='label'){
+          console.log("TagName", element.tagName.toLowerCase())
+          console.log("Text", element.textContent);
+          this.elements.find(obj => { 
+            //console.log("OBJ", obj);
+            if(obj.text === element.textContent) {
+            obj.count = obj.count +1;
+            if(obj.count>=7){
+              element.focus();
+            }
+            if(obj.count>=15){
+              element.click();
+              this.elements = [{text: '', count:0}];
+            }
+          } else {
+            this.elements.push({text: element.textContent, count:1});
+          }
+          })
+        }
+      } 
+    },
   },
   data() {
     return {
@@ -147,28 +193,6 @@ export default {
     countDownTimer() {
       if(this.questions[this.questionIndex].duration_in_sec && this.questions[this.questionIndex].duration_in_sec > 0) {
         setTimeout(() => {
-
-            // Do this thing in watch not here !!! focus after 3 and click after 7
-            if(this.eyeTrackingOn){
-              const element = document.elementFromPoint(this.x, this.y);
-              // style, focus() 
-              if(element && element.tagName.toLowerCase() ==='label'){
-                console.log("TagName", element.tagName.toLowerCase())
-                console.log("Text", element.textContent);
-                this.elements.find(obj => { 
-                  //console.log("OBJ", obj);
-                  if(obj.text === element.textContent) {
-                  obj.count = obj.count +1;
-                  if(obj.count>3){
-                    element.click();
-                    this.elements = [{text: '', count:0}];
-                  }
-                } else {
-                  this.elements.push({text: element.textContent, count:1});
-                }
-                })
-              }
-            } 
             this.questions[this.questionIndex].duration_in_sec -= 1
             this.countDownTimer()
         }, 1000)

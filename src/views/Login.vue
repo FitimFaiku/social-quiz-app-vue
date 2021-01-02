@@ -1,15 +1,18 @@
 <template>
   <div class="col-md-12">
+    <h1 id="login">Login</h1>
     <div class="card card-container">
       <img
         id="profile-img"
-        src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+        src="https://bootdey.com/img/Content/avatar/avatar7.png"
         class="profile-img-card"
+        alt="Avatar Bild"
       />
       <form name="form" @submit.prevent="handleLogin">
         <div class="form-group">
           <label for="username">Username</label>
           <input
+            id="username"
             v-model="user.username"
             v-validate="'required'"
             type="text"
@@ -25,6 +28,7 @@
         <div class="form-group">
           <label for="password">Password</label>
           <input
+            id="password"
             v-model="user.password"
             v-validate="'required'"
             type="password"
@@ -132,6 +136,10 @@ export default {
 </script>
 
 <style scoped>
+
+#login{
+  text-align: center;
+}
 label {
   display: block;
   margin-top: 10px;

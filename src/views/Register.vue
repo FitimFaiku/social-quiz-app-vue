@@ -1,16 +1,20 @@
 <template>
   <div class="col-md-12">
+    <h1 style="text-align: center;">Registrierung</h1>
     <div class="card card-container">
+      
       <img
         id="profile-img"
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
         class="profile-img-card"
+        alt="Defaulft Avatar Bild"
       />
       <form name="form" @submit.prevent="handleRegister">
         <div v-if="!successful">
           <div class="form-group">
             <label for="username">Username</label>
             <input
+              id="username"
               v-model="user.username"
               v-validate="'required|min:3|max:20'"
               type="text"
@@ -25,6 +29,7 @@
           <div class="form-group">
             <label for="email">Email</label>
             <input
+              id="email"
               v-model="user.email"
               v-validate="'required|email|max:50'"
               type="email"
@@ -39,6 +44,7 @@
           <div class="form-group">
             <label for="password">Password</label>
             <input
+              id="password"
               v-model="user.password"
               v-validate="'required|min:6|max:40'"
               type="password"
@@ -53,6 +59,7 @@
           <div class="form-group">
             <label for="dateOfBirth">Date of your Birth: (DD-MM-YYYY)</label>
             <input
+              id="dateOfBirth"
               v-model="user.dateOfBirth"
               type="date"
               class="form-control"
@@ -64,7 +71,7 @@
             >{{errors.first('dateOfBirth')}}</div>
           </div>
           <div class="form-group">
-            <button class="btn btn-primary btn-block" >Sign Up</button>
+            <button class="btn btn-primary btn-block">Registrieren</button>
           </div>
         </div>
       </form>

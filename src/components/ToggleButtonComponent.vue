@@ -1,3 +1,13 @@
+<style lang="scss">
+.toggle__label{
+        color: white;
+}
+.active {
+    span {
+        color: green;
+    }
+}
+</style>
 <template>
     <label :for="id + '_button'" :class="{'active': isActive}" class="toggle__button">
         <span v-if="isActive" class="toggle__label">{{ enableText }}</span>

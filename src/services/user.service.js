@@ -1,13 +1,13 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = 'http://localhost:8080/v1/player/';
+const API_URL = 'http://localhost:4010/v1/player/';
 
 class UserService {
 
   getUser(id) {
-    return axios.get(API_URL + id, {headers: authHeader()}).then(result => {
-      return result
+    return axios.get(API_URL + id , {headers: authHeader()}).then(result => {
+      return result.data;
     });
   }
 

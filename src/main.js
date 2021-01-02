@@ -14,13 +14,17 @@ import bootstrapvue from 'bootstrap-vue'
 import {
   faHome,
   faUser,
+  faPlay,
   faUserPlus,
   faSignInAlt,
-  faSignOutAlt
+  faSignOutAlt,
+  faPlusSquare,
+  faUsers,
+  faNewspaper
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from 'firebase';
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt,faNewspaper,faPlay,faPlusSquare,faUsers);
 
 Vue.config.productionTip = false;
 

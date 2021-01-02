@@ -17,7 +17,7 @@
                           <button v-on:click="submitFile()">Submit</button>
                     </div> -->                    
                     <div class="mt-3">
-                      <h4>John Doe</h4>
+                      <h4>{{name}}</h4>
                       <!-- <p class="text-secondary mb-1">Full Stack Developer</p>
                       <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
                       <button class="btn btn-primary">Follow</button>
@@ -73,14 +73,13 @@
                   </div>
                   <hr>
                   <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-m-6">
                       <h6 class="mb-0">Geburtsdatum</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
                       {{birth_day}}
                     </div>
                   </div>
-                  <hr>
                   <hr>
                   <div class="row">
                     <div class="col-sm-3">
@@ -156,6 +155,7 @@
 
 <script>
 import UserService from "@/services/user.service.js";
+import { mapState } from 'vuex'
 export default {
   name: 'Profile',
   data(){
@@ -175,15 +175,19 @@ export default {
     }
   },
   computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    }
+    ...mapState('auth',['user']),
+    ...mapState('alert', ['alert']),
   },
   mounted() {
-    if (!this.currentUser) {
+    if (!this.user) {
       this.$router.push('/login');
     } else {
-      UserService.getUser(this.currentUser.id);
+      UserService.getUser(this.user.id).then(response => {
+        console.log("Response", response);
+        this.name = response.player_name,
+        this.email_adress = response.e_mail_adress;
+        this.birth_day = response.date_of_birth;
+      });
     }
   }
 };

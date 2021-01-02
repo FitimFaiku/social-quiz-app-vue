@@ -13,6 +13,12 @@ class QuizService {
         });
     }
 
+    deleteQuiz(quizId) {
+      return axios.delete(API_URL + quizId, {headers: authHeader()}).then(result => {
+        return result;
+      })
+    }
+
     createQuiz(title,description,questions,isPrivate) {
       console.log("SaveQuiz");
 
@@ -43,7 +49,7 @@ class QuizService {
         quiz_description: description,
         questions: questionsArray,
         is_private: isPrivate,
-        is_public: true,
+        is_active: true,
         created_from_playerid: store.state.auth.user.id,
       }
       console.log("createQuiz Object", createQuiz);
