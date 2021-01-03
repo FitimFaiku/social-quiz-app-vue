@@ -40,7 +40,7 @@ $green: #007e90;
   }
   input:checked + label {
     background: $primary;
-      color: $logo;
+      color: white;
   }
   input:focus {
     box-shadow: 0 0 4px 1px $secondary;
@@ -56,7 +56,7 @@ input[type="radio"] {
   border:initial;
   :checked {
     background: $primary;
-    color: $logo;
+    color: white;
   }
   :focus {
     box-shadow: 0 0 4px 1px $secondary;
@@ -90,9 +90,7 @@ input[type="radio"] {
           <strong v-if="this.questions[this.questionIndex] && this.questions[this.questionIndex].duration_in_sec">{{this.questions[this.questionIndex].duration_in_sec}}</strong>
          
         </div>
-        
       </header>
-      <fieldset></fieldset>
       <div v-if="!finalStage">
         <fieldset class="fieldset-container">
           <legend>{{questions[questionIndex].question}}</legend>
@@ -135,33 +133,6 @@ export default {
     ...mapState('alert', ['alert']),
     ...mapState('eyeTracking',['eyeTrackingOn', 'x', 'y'])
   },
-  watch : {
-    x() {
-      if(this.eyeTrackingOn){
-        const element = document.elementFromPoint(this.x, this.y);
-        // style, focus() 
-        if(element && element.tagName.toLowerCase() ==='label'){
-          console.log("TagName", element.tagName.toLowerCase())
-          console.log("Text", element.textContent);
-          this.elements.find(obj => { 
-            //console.log("OBJ", obj);
-            if(obj.text === element.textContent) {
-            obj.count = obj.count +1;
-            if(obj.count>=7){
-              element.focus();
-            }
-            if(obj.count>=15){
-              element.click();
-              this.elements = [{text: '', count:0}];
-            }
-          } else {
-            this.elements.push({text: element.textContent, count:1});
-          }
-          })
-        }
-      } 
-    },
-  },
   data() {
     return {
       quizId: null,
@@ -172,10 +143,12 @@ export default {
       correctCount:0,
     };
   },
-  async created(){
-    console.log("created");
+  created(){
     this.quizId = this.$route.params.quizId;
     if(this.quizId){
+      window.setInterval(() => {
+        this.handleEyeTracking();
+      }, 700);
       QuestionService.getQuestionsForQuiz(this.quizId).then(
       response => {
         console.log("Response:", response);
@@ -193,18 +166,18 @@ export default {
     countDownTimer() {
       if(this.questions[this.questionIndex].duration_in_sec && this.questions[this.questionIndex].duration_in_sec > 0) {
         setTimeout(() => {
-            this.questions[this.questionIndex].duration_in_sec -= 1
-            this.countDownTimer()
+            this.questions[this.questionIndex].duration_in_sec -= 1;
+            this.countDownTimer();
         }, 1000)
       } else {
         console.log("Length:",this.questions.length, "index:", this.questionIndex )
         if(this.questionIndex<this.questions.length){
           let currentQuestion = this.questions[this.questionIndex];
           if(currentQuestion.answers[currentQuestion.selectedAnswer] != undefined && currentQuestion.answers[currentQuestion.selectedAnswer].is_correct){
-            console.log("correct + 1");
             this.correctCount = this.correctCount+1;
           }
           this.questionIndex= this.questionIndex+1;
+          this.elements = [{text: '', count:0}];
           if(this.questionIndex === this.questions.length){
             this.finalStage = true
           } else {
@@ -213,6 +186,32 @@ export default {
         } 
         
       }
+    }, 
+    handleEyeTracking(){
+      if(this.eyeTrackingOn){
+        const element = document.elementFromPoint(this.x, this.y);
+        // style, focus() 
+        if(element && element.tagName.toLowerCase() ==='label'){
+          console.log("TagName", element.tagName.toLowerCase())
+          console.log("Text", element.textContent);
+          this.elements.find(obj => { 
+            //console.log("OBJ", obj);
+            if(obj.text === element.textContent) {
+            obj.count = obj.count +1;
+            if(obj.count>=4){
+              element.focus();
+            }
+            if(obj.count>=8){
+              element.click();
+              this.elements = [{text: '', count:0}];
+            }
+          } else {
+            this.elements.push({text: element.textContent, count:1});
+          }
+          })
+        }
+      } 
+
     }
   },
   mounted() {

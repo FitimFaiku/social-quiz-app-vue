@@ -6,6 +6,18 @@ $secondary: #388AFC;
 $third: #152F54;
 $fourth: #074CAD;
 
+h1 {
+  color:$primary;
+}
+
+h2 {
+  color:$secondary;
+}
+
+h3 {
+  color: $third;
+}
+
 html { font-size: 62.5%; }
 table { font-size: 100% }
 body {
@@ -140,8 +152,12 @@ body {
         </div> -->
     <!-- <div>Fitim {{this.x}} {{this.y}} </div> -->
   
-    <div v-if="eyeTrackingOn"> 
+    <div v-if="eyeTrackingOn && false"> 
       <WebGazer @update="onUpdate" :off="false" />
+    </div>
+
+    <div v-if="eyeTrackingOn"> 
+      <GazeCloud @update="onUpdate" />
     </div>
 
     <!-- Footer -->
@@ -189,11 +205,13 @@ body {
 <script>
 import { mapState, mapActions } from 'vuex'
 import WebGazer from "@/components/WebGazer.vue";
+import GazeCloud from "@/components/GazeCloud.vue";
 import ToggleButtonComponent from "@/components/ToggleButtonComponent.vue"
 //  import { mdbFooter, mdbContainer, mdbRow, mdbCol } from 'mdbvue';
 // import AuthService from "./services/auth.service"
+// import '@/assets/GazeCloudAPI.js'
 export default {
-  components: { WebGazer, ToggleButtonComponent},
+  components: { WebGazer, ToggleButtonComponent,GazeCloud},
   beforeCreate() {
     //  this.$store.dispatch('auth/checkIsLoggedIn');
   },
@@ -217,9 +235,8 @@ export default {
       this.$router.push('/login');
     }, 
     onUpdate(coord) {
-      console.log("OnUpdate", coord);
-      this.$store.commit('eyeTracking/setX', {x:coord.x});
-      this.$store.commit('eyeTracking/setY', {y:coord.y});
+      this.$store.commit('eyeTracking/setX', coord.x);
+      this.$store.commit('eyeTracking/setY', coord.y);
 /*       this.x = coord.x;
       this.y = coord.y; */
     },

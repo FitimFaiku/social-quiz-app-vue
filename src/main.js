@@ -45,6 +45,9 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+//Vue.loadScript("https://api.gazerecorder.com/GazeCloudAPI.js");
+
+
 
 firebase.auth().onAuthStateChanged(() => {
   if (!app) {
