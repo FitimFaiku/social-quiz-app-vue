@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-$logo: #915F19;
 $primary: #053A85;
 $secondary: #388AFC;
 $font: "Dax", sans-serif;
@@ -45,10 +44,13 @@ $green: #007e90;
   input:focus {
     box-shadow: 0 0 4px 1px $secondary;
   }
+  input:hover {
+    background: $green;
+  }
 
 }
 input[type="radio"] {
-  background-color: initial;
+  background-color: black;
   cursor: default;
   appearance: radio;
   margin: 3px 3px 0px 5px;
@@ -136,7 +138,7 @@ export default {
   data() {
     return {
       quizId: null,
-      elements: [{text: '', count:0}],
+      elements: [{element:null, text: '', count:0}],
       questions : [{selectedAnswer:null, duration_in_sec: null, question: '', question_type: '', answers:[{id:'',answer: '', is_correct:false}]}],
       questionIndex: 0,
       finalStage:false,
@@ -177,7 +179,7 @@ export default {
             this.correctCount = this.correctCount+1;
           }
           this.questionIndex= this.questionIndex+1;
-          this.elements = [{text: '', count:0}];
+          this.elements = [{element: null, text: '', count:0}];
           if(this.questionIndex === this.questions.length){
             this.finalStage = true
           } else {
@@ -208,10 +210,11 @@ export default {
             }
             if(obj.count>=8){
               element.click();
-              this.elements = [{text: '', count:0}];
+              element.blur();
+              this.elements = [{element: null, text: '', count:0}];
             }
           } else {
-            this.elements.push({text: element.textContent, count:1});
+            this.elements.push({element:element ,text: element.textContent, count:1});
           }
           })
         }
