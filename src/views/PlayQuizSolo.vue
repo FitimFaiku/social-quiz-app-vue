@@ -188,10 +188,15 @@ export default {
       }
     }, 
     handleEyeTracking(){
-      if(this.eyeTrackingOn){
-        const element = document.elementFromPoint(this.x, this.y);
+      if(this.eyeTrackingOn && !this.finalStage){
+        const availScreenWidth  = window.screen.availWidth;
+        const availScreenHeight = window.screen.availHeight;
+        //console.log("this.x:", this.x , "this.y", this.y, "availScreenWidth", availScreenWidth, "availScreenHeight:", availScreenHeight);
+        const element = document.elementFromPoint(this.x + window.pageXOffset, this.y + window.pageYOffset);
+        console.log("Question NR:", this.questionIndex+1,"Element", element);
         // style, focus() 
         if(element && element.tagName.toLowerCase() ==='label'){
+          console.log("pageYOffset", window.pageYOffset,"this.x:", this.x , "this.y", this.y, "availScreenWidth", availScreenWidth, "availScreenHeight:", availScreenHeight);
           console.log("TagName", element.tagName.toLowerCase())
           console.log("Text", element.textContent);
           this.elements.find(obj => { 

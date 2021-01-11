@@ -11,7 +11,7 @@ button {
     <!-- <div class="card card-container"> -->
     <!-- Sidenav to NAvigate Through the Questions -->
     <div>
-      <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" title="Fragen" shadow visible>
+      <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" title="Fragen" shadow visible right>
         <template>
           <div class="p-3">
             <h2 id="sidebar-no-header-title">Aktuelle Fragen:</h2>

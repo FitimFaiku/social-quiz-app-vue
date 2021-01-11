@@ -49,8 +49,8 @@ export default {
       this.points[id] += 1;
       if (typeof Object.values(this.points).find((e) => e < this.repetitions) === "undefined") {
         this.calibrated = true;
-        localStorage.setItem('hasCalibrated', JSON.stringify(true));
-        router.push('home');
+        //localStorage.setItem('hasCalibrated', JSON.stringify(true));
+        router.push('playquiz');
       }
     },
     onCreate(id) {

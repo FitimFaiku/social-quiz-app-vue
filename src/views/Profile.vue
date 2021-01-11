@@ -71,15 +71,15 @@
                       {{email_adress}}
                     </div>
                   </div>
-                  <hr>
+                  <!--<hr>
                   <div class="row">
-                    <div class="col-m-6">
+                    <div class="col-sm-2">
                       <h6 class="mb-0">Geburtsdatum</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
                       {{birth_day}}
                     </div>
-                  </div>
+                  </div> -->
                   <hr>
                   <div class="row">
                     <div class="col-sm-3">

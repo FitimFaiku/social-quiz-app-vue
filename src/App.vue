@@ -126,7 +126,8 @@ body {
           </a>
         </li>
       </div>
-      <ToggleButtonComponent labelEnableText="Eye Tracking An" v-bind:defaultState="eyeTrackingOn" labelDisableText="Eye Tracking Aus" @change="onChangeToggleButton" />
+        <ToggleButtonComponent labelEnableText="GazeCloud Eye Tracking An" v-bind:defaultState="eyeTrackingOn" labelDisableText="GazeCloud Eye Tracking Aus" @change="onChangeToggleButton" />
+
     </nav>
     
     <div class="jumbotron">
@@ -156,7 +157,7 @@ body {
       <WebGazer @update="onUpdate" :off="false" />
     </div>
 
-    <div v-if="eyeTrackingOn"> 
+    <div v-if="eyeTrackingOn && true"> 
       <GazeCloud @update="onUpdate" />
     </div>
 
@@ -217,6 +218,8 @@ export default {
   },
   data() {
     return {
+      gazeCloudEyeTracking:false,
+      webgazerEyeTracking:false,
       x: 0,
       y: 0,
     };
