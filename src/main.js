@@ -20,11 +20,13 @@ import {
   faSignOutAlt,
   faPlusSquare,
   faUsers,
-  faNewspaper
+  faNewspaper,
+  faCog,
+  faEye
 } from '@fortawesome/free-solid-svg-icons';
 import firebase from 'firebase';
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt,faNewspaper,faPlay,faPlusSquare,faUsers);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt,faNewspaper,faPlay,faPlusSquare,faUsers, faCog, faEye);
 
 Vue.config.productionTip = false;
 

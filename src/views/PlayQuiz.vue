@@ -1,14 +1,30 @@
 <template>
   <div id="PlayQuiz" class="PlayQuiz">
       <h1>Wähle ein Quiz aus um zu spielen.</h1>
-      <ul v-for="(quiz,index) in quizes" :key="index" role="toolbar">
-        <li style="display:flex; flex-direction:column;">
-          <h2>Titel: {{quiz.quiz_title}}</h2>
-          <h3>Beschreibung: {{quiz.quiz_description}}</h3>
-          <button class="btn btn-primary" aria-setsize="4" v-bind:aria-posinset="index" @click="playSolo(quiz.id)">{{quiz.quiz_title}} Spielen</button>
-          <!-- <button @click="deleteQuiz(quiz.id)">Löschen</button> -->
-        </li>
-      </ul>
+
+      <div v-if="myQuizes.length >=1">
+        <h2>Meine erstellten Quizes</h2>
+        <ul v-for="(myQuiz,index) in myQuizes" :key="index" role="toolbar">
+          <li style="display:flex; flex-direction:column;">
+            <h3>Titel: {{myQuiz.quiz_title}}</h3>
+            <h4>Beschreibung: {{myQuiz.quiz_description}}</h4>
+            <button class="btn btn-primary" aria-setsize="4" v-bind:aria-posinset="index" @click="playSolo(myQuiz.id)">{{myQuiz.quiz_title}} Spielen</button>
+            <button class="btn btn-secondary" style="margin-top: 0.5rem;" aria-setsize="4" v-bind:aria-posinset="index" @click="editQuiz(myQuiz.id)">{{myQuiz.quiz_title}} Bearbeiten</button>
+            <button class="btn btn-danger" style="margin-top: 0.5rem;" aria-setsize="4" v-bind:aria-posinset="index" @click="deleteQuiz(myQuiz.id)">{{myQuiz.quiz_title}} Löschen</button>
+          </li>
+        </ul>
+      </div>
+
+      <div v-if="publicQuizes.length >=1">
+        <h2>Öffentlich erstellte Quizes</h2>
+        <ul v-for="(publicQuiz,index) in publicQuizes" :key="index" role="toolbar">
+          <li style="display:flex; flex-direction:column;">
+            <h3>Titel: {{publicQuiz.quiz_title}}</h3>
+            <h4>Beschreibung: {{publicQuiz.quiz_description}}</h4>
+            <button class="btn btn-primary" aria-setsize="4" v-bind:aria-posinset="index" @click="playSolo(publicQuiz.id)">{{publicQuiz.quiz_title}} Spielen</button>
+          </li>
+        </ul>
+      </div>
 
       <!-- <div v-for="(quiz,index) in quizes" :key="index">
 
@@ -32,7 +48,8 @@ export default {
   },
   data() {
     return {
-      quizes: [{id:0, quiz_title:'', quiz_description: '', created_at: null, created_from_playerid: 0}]
+      publicQuizes: [{id:0, quiz_title:'', quiz_description: '', created_at: null}],
+      myQuizes: [{id:0, quiz_title:'', quiz_description: '', created_at: null}],
     };
   },
   mounted() {
@@ -50,11 +67,23 @@ export default {
         }
       )
     },
+    editQuiz(quizId) {
+      console.log("Edit");
+      this.$router.push('/updatequiz/' + quizId);
+    },
     loadAndSetQuizes(){
       QuizService.getAllPublicQuiz().then(
         response => {
+          this.publicQuizes = [];
+          this.myQuizes = [];
             console.log("Response", response);
-          this.quizes = response;
+            response.map(quiz => {
+              if(this.user && this.user.id && quiz.created_from_player && quiz.created_from_player.id ===this.user.id){
+                this.myQuizes.push(quiz);
+              } else {
+                this.publicQuizes.push(quiz);
+              }
+            })
         },
         error => {
           this.content =

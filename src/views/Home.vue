@@ -1,16 +1,19 @@
 <template>
-  <div class="container">
-    <header class="jumbotron">
+  <div class="home">
+    <!-- <header class="jumbotron">
       <h3>Hallo {{currentUser.name}}</h3>
-    </header>
+    </header> -->
+    <News />
   </div>
 </template>
 
 <script>
 // import UserService from '../services/user.service';
+import News from './News.vue'
 import { mapState } from 'vuex'
 export default {
   name: 'Home',
+  components : {News},
   computed: {
     ...mapState({
             alert: state => state.alert,

@@ -109,8 +109,8 @@ input[type="radio"] {
         </fieldset>
       </div>
 
-      <div class="interesting-fact">
-        <label> Beispiel Text zum schauen, wenn gecklickt wurde </label>
+      <div v-if="!finalStage" class="interesting-fact">
+        <label>Interessanter Fakt: {{facts[questionIndex].fact}}</label>
       </div>
 
 
@@ -127,13 +127,14 @@ input[type="radio"] {
 <script>
 
 import QuestionService from '../services/question.service'
+import FactsService from '../services/facts.service'
 import { mapState } from 'vuex'
 export default {
   name: 'playquiz-solo',
   computed: {
     ...mapState('auth',['user']),
     ...mapState('alert', ['alert']),
-    ...mapState('eyeTracking',['eyeTrackingOn', 'x', 'y'])
+    ...mapState('eyeTracking',['eyeTrackingOn', 'x', 'y', 'intervalDuration', 'countFocus', 'countClick'])
   },
   data() {
     return {
@@ -143,6 +144,7 @@ export default {
       questionIndex: 0,
       finalStage:false,
       correctCount:0,
+      facts: [{fact: ''}],
     };
   },
   created(){
@@ -150,17 +152,24 @@ export default {
     if(this.quizId){
       window.setInterval(() => {
         this.handleEyeTracking();
-      }, 700);
+      }, this.intervalDuration);
       QuestionService.getQuestionsForQuiz(this.quizId).then(
       response => {
-        console.log("Response:", response);
+        FactsService.getRandomFacts(response.length).then(
+          facts => {
+            console.log("Facts repsonse:", facts);
+            this.facts = facts;
+          }
+        );
         this.questions = response;
         this.countDownTimer();
       },
       error => {
         console.log("Errot", error);
       }
-      )
+      ); 
+      
+      
     }
     
   },
@@ -191,24 +200,17 @@ export default {
     }, 
     handleEyeTracking(){
       if(this.eyeTrackingOn && !this.finalStage){
-        const availScreenWidth  = window.screen.availWidth;
-        const availScreenHeight = window.screen.availHeight;
-        //console.log("this.x:", this.x , "this.y", this.y, "availScreenWidth", availScreenWidth, "availScreenHeight:", availScreenHeight);
         const element = document.elementFromPoint(this.x + window.pageXOffset, this.y + window.pageYOffset);
-        console.log("Question NR:", this.questionIndex+1,"Element", element);
         // style, focus() 
         if(element && element.tagName.toLowerCase() ==='label'){
-          console.log("pageYOffset", window.pageYOffset,"this.x:", this.x , "this.y", this.y, "availScreenWidth", availScreenWidth, "availScreenHeight:", availScreenHeight);
-          console.log("TagName", element.tagName.toLowerCase())
-          console.log("Text", element.textContent);
           this.elements.find(obj => { 
             //console.log("OBJ", obj);
             if(obj.text === element.textContent) {
             obj.count = obj.count +1;
-            if(obj.count>=4){
+            if(obj.count>=this.countFocus){
               element.focus();
             }
-            if(obj.count>=8){
+            if(obj.count>=this.countClick){
               element.click();
               element.blur();
               this.elements = [{element: null, text: '', count:0}];

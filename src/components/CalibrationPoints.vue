@@ -49,6 +49,7 @@ export default {
       this.points[id] += 1;
       if (typeof Object.values(this.points).find((e) => e < this.repetitions) === "undefined") {
         this.calibrated = true;
+        //const eyeSettings = JSON.parse(localStorage.getItem('eyeSettings'));
         //localStorage.setItem('hasCalibrated', JSON.stringify(true));
         router.push('playquiz');
       }

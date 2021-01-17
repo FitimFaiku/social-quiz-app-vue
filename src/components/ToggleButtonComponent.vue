@@ -9,6 +9,7 @@
 }
 </style>
 <template>
+    <div style="display: flex; flex-direction:column">
     <label :for="id + '_button'" :class="{'active': isActive}" class="toggle__button">
         <span v-if="isActive" class="toggle__label">{{ enableText }}</span>
         <span v-if="! isActive" class="toggle__label">{{ disabledText }}</span>
@@ -16,6 +17,23 @@
         <input type="checkbox" :disabled="disabled" :id="id + '_button'" v-model="checkedValue">
         <span class="toggle__switch"></span>
     </label>
+
+    <router-link v-if="currentState == true" to="/eye-settings" class="nav-link">
+        <font-awesome-icon icon="eye" /> 
+        <font-awesome-icon icon="cog" /> Einstellungen
+        <!-- {{ user.username }} -->
+    </router-link>
+
+    <!-- <b-form-group label="Wähle aus zwischen GazeCloudAPI und Webgazer als Tool für die berechnung des Punktes, wo die Augen hin schauen" v-slot="{ ariaDescribedby }">
+      <b-form-radio-group
+        id="radio-group-1"
+        v-model="selected"
+        :options="options"
+        :aria-describedby="ariaDescribedby"
+        name="radio-options"
+      ></b-form-radio-group>
+    </b-form-group> -->
+    </div>
 </template>
 
 <script>

@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
+import News from './views/News.vue'
 
 Vue.use(Router);
 
@@ -21,6 +22,10 @@ export const router = new Router({
     {
       path: '/login',
       component: Login
+    },
+    {
+      path: '/news',
+      component: News
     },
     {
       path: '/register',
@@ -68,19 +73,31 @@ export const router = new Router({
       name: 'createquiz',
       // lazy-loaded
       component: () => import('./views/CreateQuiz.vue')
+    },
+    {
+      path: '/updatequiz/:quizId',
+      name: 'updatequiz',
+      // lazy-loaded
+      component: () => import('./views/CreateQuiz.vue')
+    },
+    
+    {
+      path: '/eye-settings',
+      name: 'eyetrackingsettings',
+      // lazy-loaded
+      component: () => import('./views/EyeTrackingSettings.vue')
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/news','/playquiz','/playquiz/solo/:quizId','/login', '/register', '/calibration'];
+  const publicPages = ['/news','/playquiz','/playquiz/solo/:quizId','/login', '/register', '/calibration', '/eye-settings'];
   let authRequired = !publicPages.includes(to.path);
   authRequired =  authRequired && !to.path.startsWith('/playquiz/solo/');
   const loggedIn = localStorage.getItem('user');
 
   if (authRequired && !loggedIn) {
-    console.log("Back to login --> ", to.path, to.path.startsWith('/playquiz/solo/'), authRequired)
     return next('/login');
   }
 

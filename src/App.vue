@@ -126,8 +126,7 @@ body {
           </a>
         </li>
       </div>
-        <ToggleButtonComponent labelEnableText="GazeCloud Eye Tracking An" v-bind:defaultState="eyeTrackingOn" labelDisableText="GazeCloud Eye Tracking Aus" @change="onChangeToggleButton" />
-
+        <ToggleButtonComponent labelEnableText="Eye Tracking An" v-bind:defaultState="eyeTrackingOn" labelDisableText="Eye Tracking Aus" @change="onChangeToggleButton" />
     </nav>
     
     <div class="jumbotron">
@@ -153,11 +152,11 @@ body {
         </div> -->
     <!-- <div>Fitim {{this.x}} {{this.y}} </div> -->
   
-    <div v-if="eyeTrackingOn && false"> 
+    <div v-if="eyeTrackingOn && webgazerOn"> 
       <WebGazer @update="onUpdate" :off="false" />
     </div>
 
-    <div v-if="eyeTrackingOn && true"> 
+    <div v-if="eyeTrackingOn && gazerecorderOn"> 
       <GazeCloud @update="onUpdate" />
     </div>
 
@@ -216,6 +215,9 @@ export default {
   beforeCreate() {
     //  this.$store.dispatch('auth/checkIsLoggedIn');
   },
+  created () {
+    this.$store.dispatch('eyeTracking/checkInitialState');
+  },
   data() {
     return {
       gazeCloudEyeTracking:false,
@@ -227,7 +229,7 @@ export default {
   computed: {
     ...mapState('auth',['user']),
     ...mapState('alert', ['alert']),
-    ...mapState('eyeTracking',['eyeTrackingOn'])
+    ...mapState('eyeTracking',['eyeTrackingOn', 'webgazerOn', 'gazerecorderOn'])
   },
   methods: {
     ...mapActions({
@@ -244,7 +246,7 @@ export default {
       this.y = coord.y; */
     },
     onChangeToggleButton(value){
-      this.$store.dispatch('eyeTracking/checkHasCalibratedAndSetEyeTracking', {isOn:value});
+      this.$store.dispatch('eyeTracking/toggleEyeTracking', {isOn:value});
     },
     hasCamera() {
       navigator.getUserMedia({video: true},function (stream) {
