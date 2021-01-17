@@ -200,7 +200,7 @@ export default {
     }, 
     handleEyeTracking(){
       if(this.eyeTrackingOn && !this.finalStage){
-        const element = document.elementFromPoint(this.x + window.pageXOffset, this.y + window.pageYOffset);
+        const element = document.elementFromPoint(this.x + window.pageXOffset, this.y + window.pageYOffset/2);
         // style, focus() 
         if(element && element.tagName.toLowerCase() ==='label'){
           this.elements.find(obj => { 

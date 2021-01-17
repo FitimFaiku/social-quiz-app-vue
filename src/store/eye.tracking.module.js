@@ -29,7 +29,7 @@ const actions = {
             state.gazerecorderOn = true;
             state.intervalDuration = 500;
             state.countClick = 8;
-            state.countFocus = 8;
+            state.countFocus = 4;
         }
         if(eyeSettings){
             commit('setEyeTreacking', isOn);
