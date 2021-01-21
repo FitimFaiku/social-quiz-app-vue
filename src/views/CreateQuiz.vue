@@ -3,6 +3,14 @@
 button {
   margin-left: 0.5rem;
 }
+.input-group{
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+textarea{
+  min-height: 180px;
+}
 </style>
 
 <template>
@@ -66,33 +74,34 @@ button {
     </b-form-group>
 
     
-    <b-form-checkbox
+    <b-form-group label="Bitte die Quiz Optionen auswählen" v-slot="{ ariaDescribedby }">
+      <b-form-checkbox-group
+        id="checkbox-quiz-options"
+        v-model="selectedQuizOptions"
+        :options="quizOptions"
+        :aria-describedby="ariaDescribedby"
+        name="quiz-options-1"
+      ></b-form-checkbox-group>
+    </b-form-group>
+
+    <!-- <b-form-checkbox
       id="checkbox-isprivate"
       type="checkbox"
+      v-model="isPrivate"
       :value="isPrivate"
       :checked="isPrivate"
     >
     Dieses Quiz Privat abspeichern
-    </b-form-checkbox>
+    </b-form-checkbox> -->
 
       <div id="questions-answers">
-        <b-form-group
-          id="fieldset-3"
-          v-bind:description="'Frage Nummer ' + (questionIndex+1)"
-          label="Gib eine Frage ein"
-          label-for="quiz-question-text"
-          valid-feedback="Danke!"
-        >
-          <b-form-input
-            id="quiz-question-text"
-            v-model="questions[questionIndex].question"
-            type="text"
-            class="form-control"
-            name="descriptiontext" trim
-          />
-        </b-form-group>          
-        <!--todo  Some padding or margin here -->
-        
+
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Frage Nummer {{questionIndex+1}}:</span>
+          </div>
+          <textarea class="form-control" v-bind:aria-label="'Frage Nummer ' + questionIndex+1" v-model="questions[questionIndex].question"></textarea>
+        </div>
 
         <b-form-group
           id="fieldset-5"
@@ -110,77 +119,22 @@ button {
           />
         </b-form-group> 
 
-        <b-form-group description="Antwort möglichkeit" label="Wähle aus zwischen Single Choice, Multiple Choice oder True False Antworten" v-slot="{ ariaDescribedby }">
+        <b-form-group description="Antwort möglichkeiten" label="Wähle aus zwischen Single Choice, Multiple Choice oder True False Antworten" v-slot="{ ariaDescribedby }">
           <b-form-radio v-model="questions[questionIndex].type" :aria-describedby="ariaDescribedby" name="single-choice" value="sc">Single choice</b-form-radio>
           <b-form-radio v-model="questions[questionIndex].type" :aria-describedby="ariaDescribedby" name="multiple-choice" value="mc">Multiple choice</b-form-radio>
           <b-form-radio v-model="questions[questionIndex].type" :aria-describedby="ariaDescribedby" name="true-false" value="tf">True-False</b-form-radio>
         </b-form-group>
 
         <div v-if="questions[questionIndex].type !== 'tf'">
-          <b-form-group
-          id="fieldset-6"
-          description="Antwort 1"
-          label="Wie lauten die erste Antwort?"
-          label-for="quiz-answer-1"
-          valid-feedback="Danke!"
-          >
-            <b-form-input
-              id="quiz-answer-1"
-              v-model="questions[questionIndex].answers[0].answer"
-              type="text"
-              class="form-control"
-              name="quizanswerone" trim
-            />
-          </b-form-group> 
-          <b-form-group
-            id="fieldset-7"
-            description="Antwort 2"
-            label="Wie lauten die zweite Antwort?"
-            label-for="quiz-answer-2"
-            valid-feedback="Danke!"
-          >
-            <b-form-input
-              id="quiz-answer-2"
-              v-model="questions[questionIndex].answers[1].answer"
-              type="text"
-              class="form-control"
-              name="quizanswertwo" trim
-            />
-          </b-form-group>
+          <div v-for="count in 4" class="input-group" v-bind:key="count">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Antwort Nummer {{count}}:</span>
+            </div>
+            <textarea class="form-control" v-bind:aria-label="'Antwort Nummer' + count" v-model="questions[questionIndex].answers[count-1].answer"></textarea>
+          </div>
+          <markdown-it-vue class="md-body" :content="content" /> 
 
-          <b-form-group
-            id="fieldset-8"
-            description="Antwort 3"
-            label="Wie lauten die drite Antwort?"
-            label-for="quiz-answer-2"
-            valid-feedback="Danke!"
-          >
-            <b-form-input
-              id="quiz-answer-4"
-              v-model="questions[questionIndex].answers[3].answer"
-              type="text"
-              class="form-control"
-              name="quizanswerthird" trim
-            />
-          </b-form-group>
-
-          <b-form-group
-            id="fieldset-8"
-            description="Antwort 4"
-            label="Wie lauten die vierte Antwort?"
-            label-for="quiz-answer-4"
-            valid-feedback="Danke!"
-          >
-            <b-form-input
-              id="quiz-answer-$"
-              v-model="questions[questionIndex].answers[2].answer"
-              type="text"
-              class="form-control"
-              name="quizanswerfourth" trim
-            />
-          </b-form-group>
-
-          <!-- Hier kommen die Radio Buttons -->
+          <!-- Hier kommen die sc Radio Buttons -->
           <div v-if="questions[questionIndex].type == 'sc'">
             <b-form-group label="Wähle die Antwort aus, welche richtig ist" v-slot="{ ariaDescribedby }">
               <b-form-radio-group
@@ -190,13 +144,10 @@ button {
                 :aria-describedby="ariaDescribedby"
                 name="radio-options"
               ></b-form-radio-group>
-
-                <!-- <b-form-radio :aria-describedby="ariaDescribedby" v-model="questions[questionIndex].correctAnswers" name="is-first-answer-right" value="0" checked>Antwort 1</b-form-radio>
-                <b-form-radio :aria-describedby="ariaDescribedby" v-model="questions[questionIndex].correctAnswers" name="is-second-answer-right" value="1" >Antwort 2</b-form-radio>
-                <b-form-radio :aria-describedby="ariaDescribedby" v-model="questions[questionIndex].correctAnswers" name="is-third-answer-right" value="2">Antwort 3</b-form-radio>
-                <b-form-radio :aria-describedby="ariaDescribedby" v-model="questions[questionIndex].correctAnswers" name="is-fourth-answer-right" value="3">Antwort 4</b-form-radio> -->
             </b-form-group>
           </div>
+
+          <!-- Hier kommen die mc Checkboxen -->
           <div v-if="questions[questionIndex].type == 'mc'">
             <b-form-group label="Using options array:" v-slot="{ ariaDescribedby }">
               <b-form-checkbox-group
@@ -208,13 +159,30 @@ button {
               ></b-form-checkbox-group>
             </b-form-group>
           </div>
-      </div>
 
-        
-        
-        <div v-if="questions[questionIndex].type == 'tf'">
-          We are in true false choice
+          <!-- Hier kommen die true false Radio Buttons -->
+
+          
+      </div>
+      <div v-if="questions[questionIndex].type == 'tf'">
+
+        <div v-for="count in 2" class="input-group" v-bind:key="count">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Antwort Nummer {{count}}:</span>
+          </div>
+          <textarea class="form-control" v-bind:aria-label="'Antwort Nummer' + count" v-model="questions[questionIndex].answers[count-1].answer"></textarea>
         </div>
+
+        <b-form-group label="Wähle die Antwort aus, welche richtig ist" v-slot="{ ariaDescribedby }">
+          <b-form-radio-group
+            id="radio-group-single-choice-tf"
+            v-model="questions[questionIndex].selectedSingleChoice"
+            :options="optionsTrueFalse"
+            :aria-describedby="ariaDescribedby"
+            name="radio-options"
+          ></b-form-radio-group>
+        </b-form-group>
+      </div>
 
       </div>
       <!-- <div v-for="question in qeustions" :key="question.questionIndex">
@@ -253,8 +221,11 @@ button {
 // import UserService from '../services/user.service';
 import { mapState } from 'vuex'
 import QuizService from '../services/quiz.service'
+import MarkdownItVue from 'markdown-it-vue'
+import 'markdown-it-vue/dist/markdown-it-vue.css'
 export default {
   name: 'CreateQuiz',
+  components: {MarkdownItVue},
   computed: {
     ...mapState({
         alert: state => state.alert,
@@ -269,7 +240,13 @@ export default {
   },
   data() {
     return {
+      content: '## h2 Heading 8-)',
       quizId: null,
+      selectedQuizOptions: ['toPublish'], // Must be an array reference!
+      quizOptions: [
+        { text: 'Privat abspeichern', value: 'isPrivate' },
+        { text: 'Veröfentlichen', value: 'toPublish' }
+      ],
       optionsSingleChoice: [
         { text: 'Antwort 1', value: 0 },
         { text: 'Antwort 2', value: 1 },
@@ -282,6 +259,11 @@ export default {
         { text: 'Antwort 3', value: 2, disabled: false },
         { text: 'Antwort 4', value: 3 }
       ],
+      optionsTrueFalse:  [
+        { text: 'Antwort 1', value: 0 },
+        { text: 'Antwort 2', value: 1 },
+      ],
+
       isPrivate:false,
       title:'Test Title',
       description: 'Test Description',

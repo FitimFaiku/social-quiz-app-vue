@@ -49,6 +49,9 @@ $green: #007e90;
   }
 
 }
+.md-body {
+  align-self: center;
+}
 input[type="radio"] {
   background-color: black;
   cursor: default;
@@ -95,13 +98,18 @@ input[type="radio"] {
       </header>
       <div v-if="!finalStage">
         <fieldset class="fieldset-container">
-          <legend>{{questions[questionIndex].question}}</legend>
+          <legend>
+            <!-- {{questions[questionIndex].question}} -->
+            <markdown-it-vue class="md-body" :content="questions[questionIndex].question" />
+          </legend>
 
           <div class="answer" role="button" v-for="(answer,index) in questions[questionIndex].answers" v-bind:key="index" >
             <div>
             <input v-bind:id="'answer_' + index" v-if="questions[questionIndex].question_type =='sc'" type="radio" v-model="questions[questionIndex].selectedAnswer" v-bind:value="index" />
+            <input v-bind:id="'answer_' + index" v-if="questions[questionIndex].question_type =='mc'" type="checkbox" v-model="questions[questionIndex].selectedAnswers" v-bind:value="index" />
             <label v-bind:for="'answer_' + index" tabindex="0">
-            {{questions[questionIndex].answers[index].answer}}
+            <!-- {{questions[questionIndex].answers[index].answer}} -->
+            <markdown-it-vue class="md-body" :content="questions[questionIndex].answers[index].answer" />
             </label>
             </div>
             <!-- <span v-html="questions[questionIndex].answers[index].answer"></span> -->
@@ -109,11 +117,9 @@ input[type="radio"] {
         </fieldset>
       </div>
 
-      <div v-if="!finalStage" class="interesting-fact">
+      <div v-if="!finalStage &&  facts[questionIndex] && facts[questionIndex].fact " class="interesting-fact">
         <label>Interessanter Fakt: {{facts[questionIndex].fact}}</label>
       </div>
-
-
 
       <div v-if="finalStage"> 
         <h2>Ergebnis</h2>
@@ -129,8 +135,11 @@ input[type="radio"] {
 import QuestionService from '../services/question.service'
 import FactsService from '../services/facts.service'
 import { mapState } from 'vuex'
+import MarkdownItVue from 'markdown-it-vue'
+import 'markdown-it-vue/dist/markdown-it-vue.css'
 export default {
   name: 'playquiz-solo',
+  components: {MarkdownItVue},
   computed: {
     ...mapState('auth',['user']),
     ...mapState('alert', ['alert']),
@@ -140,7 +149,7 @@ export default {
     return {
       quizId: null,
       elements: [{element:null, text: '', count:0}],
-      questions : [{selectedAnswer:null, duration_in_sec: null, question: '', question_type: '', answers:[{id:'',answer: '', is_correct:false}]}],
+      questions : [{selectedAnswers: [], selectedAnswer:null, duration_in_sec: null, question: '', question_type: '', answers:[{id:'',answer: '', is_correct:false}]}],
       questionIndex: 0,
       finalStage:false,
       correctCount:0,
@@ -161,7 +170,12 @@ export default {
             this.facts = facts;
           }
         );
+        
         this.questions = response;
+        // Add empty selectedAnswers to Questions for correctcount Afterwards.
+        this.questions.map(question => {
+          question.selectedAnswers = [];
+        })
         this.countDownTimer();
       },
       error => {
@@ -184,8 +198,24 @@ export default {
         console.log("Length:",this.questions.length, "index:", this.questionIndex )
         if(this.questionIndex<this.questions.length){
           let currentQuestion = this.questions[this.questionIndex];
-          if(currentQuestion.answers[currentQuestion.selectedAnswer] != undefined && currentQuestion.answers[currentQuestion.selectedAnswer].is_correct){
+          if(currentQuestion.question_type != "mc" && currentQuestion.answers[currentQuestion.selectedAnswer] != undefined && currentQuestion.answers[currentQuestion.selectedAnswer].is_correct){
             this.correctCount = this.correctCount+1;
+          }
+          if(currentQuestion.question_type === "mc") {
+            let rightAnswersCount = 0;
+            let hasChoosenCorrectAnswers = true;
+            currentQuestion.answers.map((answer,index) => {
+              if(answer.is_correct){
+                rightAnswersCount++;
+                if(!currentQuestion.selectedAnswers.includes(index)) {
+                  hasChoosenCorrectAnswers = false;
+                }
+              }
+              
+            });
+            if(rightAnswersCount === currentQuestion.selectedAnswers.length && hasChoosenCorrectAnswers){
+              this.correctCount = this.correctCount+1;
+            }
           }
           this.questionIndex= this.questionIndex+1;
           this.elements = [{element: null, text: '', count:0}];

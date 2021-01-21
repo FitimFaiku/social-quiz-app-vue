@@ -22,13 +22,14 @@
       <li>Eye-Tracking Einstellungen verwalten</li>
       <li>Quiz spielen alleine</li>
       <li>Quiz erstellen und updaten</li>
+      <li>Markdown Syntax als Frage oder Antwort eingeben</li>
     </ul>
 
     <h2>Zukünftige Ziele</h2>
     <ul>
       <li>Freundschaften verwalten</li>
       <li>Multiplayer Spiele spielen</li>
-      <li>Markdown Syntax als Frage oder Antwort eingeben</li>
+      
     </ul>
 
   
