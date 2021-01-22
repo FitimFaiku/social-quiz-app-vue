@@ -60,7 +60,7 @@ body {
 </style>
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand">
+    <nav id="nav-header-id" class="navbar navbar-expand" ref="navbar">
       <router-link to="/home" class="nav-link"> <img src="./assets/logo.svg" alt="Logo Bild, welches zur Home Seite führt"/></router-link>
       <div class="navbar-nav mr-auto">
         <!-- <li class="nav-item">

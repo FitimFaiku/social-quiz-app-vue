@@ -82,9 +82,9 @@ export default {
   name: 'EyeTrackingSettings',
   data() {
     return {
-      intervalDurationLocal: 700,
-      countFocusLocal: 4,
-      countClickLocal: 10,
+      intervalDurationLocal: 500,
+      countFocusLocal: 3,
+      countClickLocal: 6,
       selectedEyeTracking: 'gazerecorder',
       options: [
           { text: 'GazecloudAPI', value: 'gazerecorder' },

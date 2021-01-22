@@ -229,9 +229,12 @@ export default {
       }
     }, 
     handleEyeTracking(){
+      
       if(this.eyeTrackingOn && !this.finalStage){
-        const element = document.elementFromPoint(this.x + window.pageXOffset, this.y + window.pageYOffset/2);
+        let headerHeight = document.querySelector("#nav-header-id").offsetHeight;
+        const element = document.elementFromPoint(this.x + window.pageXOffset, this.y + (window.pageYOffset - headerHeight));
         // style, focus() 
+        console.log("text:",element.textContent, "tagName", element.tagName.toLowerCase(), "element:", element);
         if(element && element.tagName.toLowerCase() ==='label'){
           this.elements.find(obj => { 
             //console.log("OBJ", obj);

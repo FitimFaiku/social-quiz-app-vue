@@ -132,7 +132,6 @@ textarea{
             </div>
             <textarea class="form-control" v-bind:aria-label="'Antwort Nummer' + count" v-model="questions[questionIndex].answers[count-1].answer"></textarea>
           </div>
-          <markdown-it-vue class="md-body" :content="content" /> 
 
           <!-- Hier kommen die sc Radio Buttons -->
           <div v-if="questions[questionIndex].type == 'sc'">
@@ -221,11 +220,8 @@ textarea{
 // import UserService from '../services/user.service';
 import { mapState } from 'vuex'
 import QuizService from '../services/quiz.service'
-import MarkdownItVue from 'markdown-it-vue'
-import 'markdown-it-vue/dist/markdown-it-vue.css'
 export default {
   name: 'CreateQuiz',
-  components: {MarkdownItVue},
   computed: {
     ...mapState({
         alert: state => state.alert,
@@ -240,12 +236,11 @@ export default {
   },
   data() {
     return {
-      content: '## h2 Heading 8-)',
       quizId: null,
       selectedQuizOptions: ['toPublish'], // Must be an array reference!
       quizOptions: [
         { text: 'Privat abspeichern', value: 'isPrivate' },
-        { text: 'Veröfentlichen', value: 'toPublish' }
+        { text: 'Veröffentlichen', value: 'toPublish' }
       ],
       optionsSingleChoice: [
         { text: 'Antwort 1', value: 0 },
@@ -265,10 +260,10 @@ export default {
       ],
 
       isPrivate:false,
-      title:'Test Title',
-      description: 'Test Description',
+      title:'Test Titel',
+      description: 'Test Beschreibung',
       questions: [
-        {question:'Test Frage',answers:[{answer:'Test Answer 1', isRight:false}, {answer:'Test Answer 2', isRight:false},{answer:'Test Answer 3', isRight:false}, {answer:'Test Answer 4', isRight:false}], type:'', duration: 30, correctAnswers:[], selectedSingleChoice: null, selectedMultipleChoice: []}
+        {question:'Test Frage',answers:[{answer:'Test Antwort 1', isRight:false}, {answer:'Test Antwort 2', isRight:false},{answer:'Test Antwort 3', isRight:false}, {answer:'Test Antwort 4', isRight:false}], type:'', duration: 30, correctAnswers:[], selectedSingleChoice: null, selectedMultipleChoice: []}
       ],
       questionIndex: 0, 
     };
@@ -297,7 +292,6 @@ export default {
           console.log("Question", question);
           let questionObject = {question:question.question, type:question.question_type, duration: question.duration_in_sec, answers :[], selectedSingleChoice: null, selectedMultipleChoice: []};
           question.answers.map((answer,index) => {
-            console.log("Answer", answer);
             if(answer.is_correct && question.question_type === "sc"){
               questionObject.selectedSingleChoice = index;
             }
@@ -313,7 +307,6 @@ export default {
           questions.push(questionObject);
           // const questionObject = {question.}
         });
-        console.log("Questions:", questions);
         this.questions = questions;
         this.title = response.quiz_title;
         this.description = response.quiz_description;
