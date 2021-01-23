@@ -232,7 +232,7 @@ export default {
       
       if(this.eyeTrackingOn && !this.finalStage){
         let headerHeight = document.querySelector("#nav-header-id").offsetHeight;
-        const element = document.elementFromPoint(this.x + window.pageXOffset, this.y + (window.pageYOffset - headerHeight));
+        const element = document.elementFromPoint(this.x + window.pageXOffset, this.y + ((window.pageYOffset /2) - headerHeight));
         // style, focus() 
         console.log("text:",element.textContent, "tagName", element.tagName.toLowerCase(), "element:", element);
         if(element && element.tagName.toLowerCase() ==='label'){

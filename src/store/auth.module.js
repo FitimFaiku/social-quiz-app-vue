@@ -43,7 +43,7 @@ const actions = {
                         router.push('/login');
                         setTimeout(() => {
                             // display success message after route change completes
-                            dispatch('alert/success', 'Registration successful', { root: true });
+                            dispatch('alert/success', 'Erfolgreich registriert', { root: true });
                         })
                     }
                 },
