@@ -284,7 +284,19 @@ export default {
   created() {
     this.quizId = this.$route.params.quizId;
     if(this.quizId){
-      QuizService.findById(this.quizId).then(response => {
+      this.getQuizAndMapLocalValues(this.quizId);
+    }
+  },
+  methods: {
+
+    next(){
+      const question = {question:'',answers:[{answer:'', isRight:false}, {answer:'', isRight:false},{answer:'', isRight:false}, {answer:'', isRight:false}], type:'', duration: 30, correctAnswers:[], selectedSingleChoice: null, selectedMultipleChoice: []}
+      this.questions.push(question);
+      this.questionIndex++;
+    },
+
+    getQuizAndMapLocalValues(quizId) {
+      QuizService.findById(quizId).then(response => {
         console.log("Response update component", response, "Q:", response.questions);
         let questions = [];
         response.questions.map ( question => {
@@ -292,7 +304,7 @@ export default {
           console.log("Question", question);
           let questionObject = {question:question.question, type:question.question_type, duration: question.duration_in_sec, answers :[], selectedSingleChoice: null, selectedMultipleChoice: []};
           question.answers.map((answer,index) => {
-            if(answer.is_correct && question.question_type === "sc"){
+            if(answer.is_correct && (question.question_type === "sc" || question.question_type ==="tf")){
               questionObject.selectedSingleChoice = index;
             }
 
@@ -314,19 +326,11 @@ export default {
         this.quizId= response.id;
         
       });
-    }
-  },
-  methods: {
-
-    next(){
-      const question = {question:'',answers:[{answer:'', isRight:false}, {answer:'', isRight:false},{answer:'', isRight:false}, {answer:'', isRight:false}], type:'', duration: 30, correctAnswers:[], selectedSingleChoice: null, selectedMultipleChoice: []}
-      this.questions.push(question);
-      this.questionIndex++;
     },
     mapAnswerRightToObject() {
       this.questions.map(question => {
         question.answers.map((answer, answerIndex) => {
-          if(question.type === "sc"){
+          if(question.type === "sc" || question.type === "tf" ){
             if(question.selectedSingleChoice === answerIndex){
               answer.isRight = true;
             }
@@ -354,7 +358,8 @@ export default {
         }
       } */
 
-      QuizService.createQuiz(this.title,this.description, this.questions, this.isPrivate);
+      this.quizId = QuizService.createQuiz(this.title,this.description, this.questions, this.isPrivate);
+
     }, 
     handleUpdate () {
       this.mapAnswerRightToObject();

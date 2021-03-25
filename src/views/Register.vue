@@ -12,7 +12,7 @@
       <form name="form" @submit.prevent="handleRegister">
         <div v-if="!successful">
           <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username">Benutzername</label>
             <input
               id="username"
               v-model="user.username"
@@ -27,7 +27,7 @@
             >{{errors.first('username')}}</div>
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">E-Mail Adresse</label>
             <input
               id="email"
               v-model="user.email"
@@ -57,7 +57,7 @@
             >{{errors.first('password')}}</div>
           </div>
           <div class="form-group">
-            <label for="dateOfBirth">Date of your Birth: (DD-MM-YYYY)</label>
+            <label for="dateOfBirth">Geburtsdatum: (DD-MM-YYYY)</label>
             <input
               id="dateOfBirth"
               v-model="user.dateOfBirth"

@@ -79,10 +79,11 @@ class QuizService {
 
       return axios.post(API_URL + 'create', {createQuiz})
         .then(response => {
-          console.log("Response §§§§§", response.status);
+          console.log("Response §§§§§ response", response);
           if(response.status >=200 && response.status<=299) {
             console.log("Status is in 200");
             store.dispatch('alert/success', "Quiz " + title  +" erfolgreich gespeichert");
+            return response.data.id;
           } else{
             console.log("Status is not in 200");
             store.dispatch('alert/error', "Quiz " + title  +" wurde nicht erfolgreich erfolgreich gespeichert");
